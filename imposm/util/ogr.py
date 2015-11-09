@@ -127,4 +127,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         where = sys.argv[2]
     for wkt in reader.wkts(where):
-        print wkt
+        print(wkt)

@@ -16,7 +16,7 @@ from collections import defaultdict
 from multiprocessing import Process
 
 import threading
-from Queue import Queue
+from queue import Queue
 
 from imposm.base import OSMElem
 from imposm.geom import IncompletePolygonError
@@ -88,7 +88,7 @@ class TupleBasedImporter(ImporterProcess):
                 del mappings[mapping]
 
         # flush
-        for mapping, insert_data in mappings.iteritems():
+        for mapping, insert_data in mappings.items():
             if not dry_run:
                 db.insert(mapping, insert_data)
 
@@ -161,8 +161,8 @@ class DictBasedImporter(ImporterProcess):
 
                 inserted = True
 
-        for obj in osm_objects.itervalues():
-            if isinstance(obj['geometry'], (list, )):
+        for obj in osm_objects.values():
+            if isinstance(obj['geometry'], list):
                 for geom in obj['geometry']:
                     obj_part = obj.copy()
                     obj_part['geometry'] = geom
@@ -213,7 +213,7 @@ class WayProcess(ImporterProcess):
         inserted_ways = iter(inserted_ways_cache)
 
         try:
-            skip_id = inserted_ways.next()
+            skip_id = next(inserted_ways)
         except StopIteration:
             skip_id = 2**64
 
@@ -227,7 +227,7 @@ class WayProcess(ImporterProcess):
                 # than our current id
                 while skip_id < way.osm_id:
                     try:
-                        skip_id = inserted_ways.next()
+                        skip_id = next(inserted_ways)
                     except StopIteration:
                         skip_id = 2**64
 
@@ -275,7 +275,7 @@ class RelationProcess(ImporterProcess):
                 builder = RelationBuilder(relation, ways_cache, coords_cache)
                 try:
                     builder.build()
-                except IncompletePolygonError, ex:
+                except IncompletePolygonError as ex:
                     if str(ex):
                         log.debug(ex)
                     continue

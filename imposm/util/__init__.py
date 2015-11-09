@@ -20,7 +20,7 @@ import mmap
 import multiprocessing
 
 from multiprocessing import JoinableQueue
-from Queue import Empty
+from queue import Empty
 
 import logging
 log = logging.getLogger(__name__)
@@ -63,17 +63,17 @@ class ParserProgress(multiprocessing.Process):
 
     @staticmethod
     def message(msg):
-        print >>sys.stderr, "[%s] %s" % (timestamp(), msg)
+        print("[%s] %s" % (timestamp(), msg), file=sys.stderr)
         sys.stderr.flush()
 
     def print_log(self, counters):
-        print >>sys.stderr, "[%s] coords: %dk nodes: %dk ways: %dk relations: %dk\r" % (
+        print("[%s] coords: %dk nodes: %dk ways: %dk relations: %dk\r" % (
             timestamp(),
             int(counters['coords']/1000),
             int(counters['nodes']/1000),
             int(counters['ways']/1000),
             int(counters['relations']/1000)
-        ),
+        ), end=' ', file=sys.stderr)
         sys.stderr.flush()
 
     def log(self, log_type, incr):
@@ -101,7 +101,7 @@ class ProgressLog(object):
 
     @staticmethod
     def message(msg):
-        print >>sys.stderr, "[%s] %s" % (timestamp(), msg)
+        print("[%s] %s" % (timestamp(), msg), file=sys.stderr)
         sys.stderr.flush()
 
     def log(self, value=None, step=1):
@@ -116,18 +116,18 @@ class ProgressLog(object):
     def print_log(self):
         if time.time() - self.last_log > self.log_every_seconds:
             self.last_log = time.time()
-            print >>sys.stderr, "[%s] %s: %dk%s\r" % (
+            print("[%s] %s: %dk%s\r" % (
                 timestamp(), self.title,
                 int(self.count/1000), self._total,
-            ),
+            ), end=' ', file=sys.stderr)
             sys.stderr.flush()
 
     def stop(self):
-        print >>sys.stderr
+        print(file=sys.stderr)
         seconds = time.time() - self.start_time
         total_time = format_total_time(seconds)
-        print >>sys.stderr, "[%s] %s: total time %s for %d (%d/s)" % (
-            timestamp(), self.title, total_time, self.count, self.count/seconds)
+        print("[%s] %s: total time %s for %d (%d/s)" % (
+            timestamp(), self.title, total_time, self.count, self.count/seconds), file=sys.stderr)
         sys.stderr.flush()
 
 class QuietProgressLog(ProgressLog):
@@ -223,7 +223,7 @@ class MMapPool(object):
 
 def create_pool(creator, size):
     pool = []
-    for i in xrange(size):
+    for i in range(size):
         proc = creator()
         proc.start()
         pool.append(proc)

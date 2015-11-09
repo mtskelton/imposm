@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import division
+
 import math
 import imposm.geom
 
@@ -148,9 +148,9 @@ class Mapping(object):
             if self.limit_to_polygon is not None:
                 geom = self.limit_to_polygon.intersection(geom)
             osm_elem.geom = geom
-        except imposm.geom.InvalidGeometryError, ex:
+        except imposm.geom.InvalidGeometryError as ex:
             raise DropElem('invalid geometry: %s' % (ex, ))
-        except imposm.geom.EmtpyGeometryError, ex:
+        except imposm.geom.EmtpyGeometryError as ex:
             raise DropElem(ex)
 
     def field_values(self, osm_elem):
@@ -198,7 +198,7 @@ class TagMapper(object):
             for extra in mapping.extra_field_names():
                 tags.setdefault(extra, set()).add('__any__')
 
-            for tag, types in mapping.mapping.iteritems():
+            for tag, types in mapping.mapping.items():
                 add_to.setdefault(tag, {})
                 for type in types:
                     tags.setdefault(tag, set()).add(type)
@@ -219,7 +219,7 @@ class TagMapper(object):
 
     def _tag_filter(self, filter_tags):
         def filter(tags):
-            for k in tags.keys():
+            for k in list(tags.keys()):
                 if k not in filter_tags:
                     del tags[k]
                 else:
@@ -239,18 +239,18 @@ class TagMapper(object):
 
     def tag_filter_for_ways(self):
         tags = dict()
-        for k, v in self.line_tags.iteritems():
+        for k, v in self.line_tags.items():
             tags.setdefault(k, set()).update(v)
 
-        for k, v in self.polygon_tags.iteritems():
+        for k, v in self.polygon_tags.items():
             tags.setdefault(k, set()).update(v)
         return self._tag_filter(tags)
 
     def tag_filter_for_relations(self):
         tags = dict()
-        for k, v in self.line_tags.iteritems():
+        for k, v in self.line_tags.items():
             tags.setdefault(k, set()).update(v)
-        for k, v in self.polygon_tags.iteritems():
+        for k, v in self.polygon_tags.items():
             tags.setdefault(k, set()).update(v)
         tags['type'] = set(['multipolygon', 'boundary', 'land_area'])  # for type=multipolygon
         expected_tags = set(['type', 'name'])

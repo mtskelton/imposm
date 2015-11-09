@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import division
+
 
 import math
 import codecs
@@ -82,7 +82,7 @@ class GeomBuilder(object):
             geom_wkt = self.to_wkt(osm_elem.coords)
             if geom_wkt is not None:
                 geom = wkt.loads(geom_wkt)
-        except Exception, ex:
+        except Exception as ex:
             raise InvalidGeometryError('unable to build geometry %s: %s %s' %
                                        (osm_elem.osm_id, ex, osm_elem.coords))
         if geom_wkt is None or geom is None:
@@ -101,7 +101,7 @@ class GeomBuilder(object):
                 self.check_geom_type(osm_elem.coords)
                 return osm_elem.coords
             geom = self.to_geom(osm_elem.coords)
-        except InvalidGeometryError, ex:
+        except InvalidGeometryError as ex:
             raise InvalidGeometryError('unable to build geometry %s: %s %s' %
                                        (osm_elem.osm_id, ex, osm_elem.coords))
         if geom is None:
@@ -180,7 +180,7 @@ class LineStringBuilder(GeomBuilder):
             chunks = math.ceil(len(data) / max_length)
             length = int(len(data) // chunks)
             lines = []
-            for i in xrange(1, len(data), length):
+            for i in range(1, len(data), length):
                 lines.append(geometry.LineString(data[i-1:i+length]))
             return lines
         return geometry.LineString(data)
@@ -213,8 +213,8 @@ def tile_bbox(bbox, grid_width):
     x_steps = math.ceil((max_x - min_x) / grid_width)
     y_steps = math.ceil((max_y - min_y) / grid_width)
 
-    for x in xrange(int(x_steps)):
-        for y in xrange(int(y_steps)):
+    for x in range(int(x_steps)):
+        for y in range(int(y_steps)):
             yield (
                 min_x + x * grid_width,
                 min_y + y * grid_width,
@@ -424,7 +424,7 @@ class LimitRTreeGeometry(object):
             else:
                 log.warn('unexpexted geometry type %s', geom.type)
                 raise EmtpyGeometryError()
-        except ValueError, ex:
+        except ValueError as ex:
             # likely an 'No Shapely geometry can be created from null value' error
             log.warn('could not create union: %s', ex)
             raise EmtpyGeometryError()

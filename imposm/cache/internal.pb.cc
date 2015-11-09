@@ -135,7 +135,6 @@ const int DeltaCoords::kLonsFieldNumber;
 DeltaCoords::DeltaCoords()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:imposm.cache.internal.DeltaCoords)
 }
 
 void DeltaCoords::InitAsDefaultInstance() {
@@ -145,7 +144,6 @@ DeltaCoords::DeltaCoords(const DeltaCoords& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:imposm.cache.internal.DeltaCoords)
 }
 
 void DeltaCoords::SharedCtor() {
@@ -154,7 +152,6 @@ void DeltaCoords::SharedCtor() {
 }
 
 DeltaCoords::~DeltaCoords() {
-  // @@protoc_insertion_point(destructor:imposm.cache.internal.DeltaCoords)
   SharedDtor();
 }
 
@@ -194,26 +191,25 @@ void DeltaCoords::Clear() {
 
 bool DeltaCoords::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:imposm.cache.internal.DeltaCoords)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated sint64 ids = 1 [packed = true];
       case 1: {
-        if (tag == 10) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  input, this->mutable_ids())));
-        } else if (tag == 8) {
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  1, 10, input, this->mutable_ids())));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(18)) goto parse_lats;
         break;
@@ -221,17 +217,20 @@ bool DeltaCoords::MergePartialFromCodedStream(
 
       // repeated sint64 lats = 2 [packed = true];
       case 2: {
-        if (tag == 18) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_lats:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  input, this->mutable_lats())));
-        } else if (tag == 16) {
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  1, 18, input, this->mutable_lats())));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(26)) goto parse_lons;
         break;
@@ -239,28 +238,30 @@ bool DeltaCoords::MergePartialFromCodedStream(
 
       // repeated sint64 lons = 3 [packed = true];
       case 3: {
-        if (tag == 26) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_lons:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  input, this->mutable_lons())));
-        } else if (tag == 24) {
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  1, 26, input, this->mutable_lons())));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -268,18 +269,12 @@ bool DeltaCoords::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:imposm.cache.internal.DeltaCoords)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:imposm.cache.internal.DeltaCoords)
-  return false;
 #undef DO_
 }
 
 void DeltaCoords::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:imposm.cache.internal.DeltaCoords)
   // repeated sint64 ids = 1 [packed = true];
   if (this->ids_size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteTag(1, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
@@ -314,12 +309,10 @@ void DeltaCoords::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:imposm.cache.internal.DeltaCoords)
 }
 
 ::google::protobuf::uint8* DeltaCoords::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:imposm.cache.internal.DeltaCoords)
   // repeated sint64 ids = 1 [packed = true];
   if (this->ids_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
@@ -366,7 +359,6 @@ void DeltaCoords::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:imposm.cache.internal.DeltaCoords)
   return target;
 }
 
@@ -501,7 +493,6 @@ const int DeltaList::kIdsFieldNumber;
 DeltaList::DeltaList()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:imposm.cache.internal.DeltaList)
 }
 
 void DeltaList::InitAsDefaultInstance() {
@@ -511,7 +502,6 @@ DeltaList::DeltaList(const DeltaList& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:imposm.cache.internal.DeltaList)
 }
 
 void DeltaList::SharedCtor() {
@@ -520,7 +510,6 @@ void DeltaList::SharedCtor() {
 }
 
 DeltaList::~DeltaList() {
-  // @@protoc_insertion_point(destructor:imposm.cache.internal.DeltaList)
   SharedDtor();
 }
 
@@ -558,37 +547,35 @@ void DeltaList::Clear() {
 
 bool DeltaList::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:imposm.cache.internal.DeltaList)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated sint64 ids = 1 [packed = true];
       case 1: {
-        if (tag == 10) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  input, this->mutable_ids())));
-        } else if (tag == 8) {
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SINT64>(
                  1, 10, input, this->mutable_ids())));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -596,18 +583,12 @@ bool DeltaList::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:imposm.cache.internal.DeltaList)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:imposm.cache.internal.DeltaList)
-  return false;
 #undef DO_
 }
 
 void DeltaList::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:imposm.cache.internal.DeltaList)
   // repeated sint64 ids = 1 [packed = true];
   if (this->ids_size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteTag(1, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
@@ -622,12 +603,10 @@ void DeltaList::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:imposm.cache.internal.DeltaList)
 }
 
 ::google::protobuf::uint8* DeltaList::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:imposm.cache.internal.DeltaList)
   // repeated sint64 ids = 1 [packed = true];
   if (this->ids_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
@@ -646,7 +625,6 @@ void DeltaList::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:imposm.cache.internal.DeltaList)
   return target;
 }
 

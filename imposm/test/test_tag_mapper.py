@@ -23,8 +23,8 @@ class TestTagMapper(object):
         mapping_file = os.path.join(os.path.dirname(__file__), '..',
             'defaultmapping.py')
         mappings = {}
-        execfile(mapping_file, mappings)
-        self.tag_mapping = TagMapper([m for n, m in mappings.iteritems()
+        exec(compile(open(mapping_file).read(), mapping_file, 'exec'), mappings)
+        self.tag_mapping = TagMapper([m for n, m in mappings.items()
             if isinstance(m, imposm.mapping.Mapping)])
 
     def test_tag_filter_nodes(self):

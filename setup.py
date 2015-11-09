@@ -21,15 +21,15 @@ class build_ext_with_cython(build_ext):
         try:
             if (os.path.exists('imposm/cache/tc.c') and
                 os.path.getmtime('imposm/cache/tc.pyx') < os.path.getmtime('imposm/cache/tc.c')):
-                print 'imposm/cache/tc.c up to date'
+                print('imposm/cache/tc.c up to date')
                 return
-            print 'creating imposm/cache/tc.c'
+            print('creating imposm/cache/tc.c')
             proc = subprocess.Popen(
                 ['cython', 'imposm/cache/tc.pyx'],
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        except OSError, ex:
+        except OSError as ex:
             if ex.errno == errno.ENOENT:
-                print "Could not find cython command."
+                print("Could not find cython command.")
                 raise DistutilsPlatformError("Failed to generate "
                     "C files with cython.")
             else:
@@ -37,21 +37,21 @@ class build_ext_with_cython(build_ext):
         out = proc.communicate()[0]
         result = proc.wait()
         if result != 0:
-            print "Error during C files generation with cython:"
-            print out
+            print("Error during C files generation with cython:")
+            print(out)
             raise DistutilsPlatformError("Failed to generate "
                 "C files with cython.")
     def generate_protoc(self):
         try:
             if (os.path.exists('imposm/cache/internal.pb.cc') and 
                 os.path.getmtime('internal.proto') < os.path.getmtime('imposm/cache/internal.pb.cc')):
-                print 'imposm/cache/internal.pb.cc up to date'
+                print('imposm/cache/internal.pb.cc up to date')
                 return
-            print 'creating protofiles'
+            print('creating protofiles')
             proc = subprocess.Popen(
                 ['protoc', '--cpp_out', 'imposm/cache/', 'internal.proto'],
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        except OSError, ex:
+        except OSError as ex:
             if ex.errno == errno.ENOENT:
                 print ("Could not find protoc command. Make sure protobuf is "
                     "installed and your PATH environment is set.")
@@ -62,8 +62,8 @@ class build_ext_with_cython(build_ext):
         out = proc.communicate()[0]
         result = proc.wait()
         if result != 0:
-            print "Error during protbuf files generation with protoc:"
-            print out
+            print("Error during protbuf files generation with protoc:")
+            print(out)
             raise DistutilsPlatformError("Failed to generate protbuf "
                 "CPP files with protoc.")
     def run(self):
@@ -72,7 +72,7 @@ class build_ext_with_cython(build_ext):
             self.generate_c_file()
         except DistutilsPlatformError:
             if os.path.exists('imposm/cache/tc.c'):
-                print 'Found existing C file. Ignoring previous error.'
+                print('Found existing C file. Ignoring previous error.')
             else:
                 raise
         build_ext.run(self)

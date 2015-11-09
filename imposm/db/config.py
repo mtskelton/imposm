@@ -14,7 +14,7 @@
 
 import re
 import cgi
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from . postgis import PostGISDB
 from .. mapping import Options
@@ -29,7 +29,7 @@ def check_connection(db_conf):
     try:
         db = DB(db_conf)
         db.connection
-    except Exception, e:
+    except Exception as e:
         return e
 
 def db_conf_from_string(conf, base_db_conf):
@@ -72,7 +72,7 @@ def _parse_rfc1738_args(name):
         components['query'] = query
 
         if components['password'] is not None:
-            components['password'] = urllib.unquote_plus(components['password'])
+            components['password'] = urllib.parse.unquote_plus(components['password'])
 
         return Options(**components)
     else:

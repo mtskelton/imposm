@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import division, with_statement
+
 
 import codecs
 import os
@@ -82,7 +82,7 @@ def load_polygons(geom_files):
     the loaded geometries.
     """
     polygons = []
-    if isinstance(geom_files, basestring):
+    if isinstance(geom_files, str):
         geom_files = [geom_files]
     
     for geom_file in geom_files:
@@ -158,4 +158,4 @@ def transform_multipolygon(transf, multipolygon):
     return shapely.geometry.MultiPolygon(transformed_polygons)
 
 def transform_xy(from_srs, to_srs, xy):
-    return list(from_srs.transform_to(to_srs, zip(*xy)))
+    return list(from_srs.transform_to(to_srs, list(zip(*xy))))

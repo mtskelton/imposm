@@ -104,7 +104,7 @@ class PostGISDB(object):
             if tries:
                 self.reconnect()
             self.cur.executemany(insert_stmt, insert_data)
-        except psycopg2.OperationalError, ex:
+        except psycopg2.OperationalError as ex:
             if tries >= 8:
                 log.warn('%s, giving up', ex)
                 raise
@@ -112,12 +112,12 @@ class PostGISDB(object):
             log.warn('%s, retry in %d', ex, seconds)
             time.sleep(seconds)
             self.insert(mapping, insert_data, tries=tries + 1)
-        except psycopg2.Error, ex:
+        except psycopg2.Error as ex:
             self.connection.rollback()
             for data in insert_data:
                 try:
                     self.cur.execute(insert_stmt, data)
-                except psycopg2.Error, ex:
+                except psycopg2.Error as ex:
                     log.warn('error while importing "%r": %s', data, ex)
                     self.connection.rollback()
                 else:
@@ -126,7 +126,7 @@ class PostGISDB(object):
         self.connection.commit()
 
     def post_insert(self, mappings):
-        mappings = [m for m in mappings.values() if isinstance(m, (GeneralizedTable, Mapping))]
+        mappings = [m for m in list(mappings.values()) if isinstance(m, (GeneralizedTable, Mapping))]
         for mapping in mappings:
             table_name = self.to_tablename(mapping.name)
             self.create_geom_index(table_name)
@@ -370,22 +370,22 @@ class PostGISDB(object):
 
 
     def create_views(self, mappings, ignore_errors=False):
-        for mapping in mappings.values():
+        for mapping in list(mappings.values()):
             if isinstance(mapping, UnionView):
                 PostGISUnionView(self, mapping).create(ignore_errors=ignore_errors)
 
     def create_generalized_tables(self, mappings):
-        mappings = [m for m in mappings.values() if isinstance(m, GeneralizedTable)]
+        mappings = [m for m in list(mappings.values()) if isinstance(m, GeneralizedTable)]
         for mapping in sorted(mappings, key=lambda x: x.name, reverse=True):
             PostGISGeneralizedTable(self, mapping).create()
 
     def postprocess_tables(self, mappings):
-        mappings = [m for m in mappings.values() if isinstance(m, FixInvalidPolygons)]
+        mappings = [m for m in list(mappings.values()) if isinstance(m, FixInvalidPolygons)]
         for mapping in mappings:
             PostGISFixInvalidPolygons(self, mapping).update()
 
     def optimize(self, mappings):
-        mappings = [m for m in mappings.values() if isinstance(m, (GeneralizedTable, Mapping))]
+        mappings = [m for m in list(mappings.values()) if isinstance(m, (GeneralizedTable, Mapping))]
         for mapping in mappings:
             table_name = self.to_tablename(mapping.name)
             self.optimize_table(table_name, '%s_geom' % table_name)
@@ -393,7 +393,7 @@ class PostGISDB(object):
 
     def optimize_table(self, table_name, idx_name):
         cur = self.connection.cursor()
-        print 'Clustering table %s' % table_name
+        print('Clustering table %s' % table_name)
         cur.execute('CLUSTER "%s" ON "%s"' % (idx_name, table_name))
         self.connection.commit()
 
@@ -402,7 +402,7 @@ class PostGISDB(object):
         self.reconnect()
         self.connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         cur = self.connection.cursor()
-        print 'Vacuum analyze'
+        print('Vacuum analyze')
         cur.execute("VACUUM ANALYZE")
         self.connection.set_isolation_level(old_isolation_level)
 
@@ -447,7 +447,7 @@ class PostGISUnionView(object):
             else:
                 if default is None:
                     default = 'null'
-                elif isinstance(default, basestring):
+                elif isinstance(default, str):
                     default = "'%s'" % default
                 else:
                     default = str(default)
@@ -552,7 +552,7 @@ class PostGISFixInvalidPolygons(object):
             cur.execute('SAVEPOINT polygonfix;')
             try:
                 cur.execute(update)
-            except psycopg2.DatabaseError, ex:
+            except psycopg2.DatabaseError as ex:
                 log.warn('Could not fix geometry with osm_id %d. Row will be deleted. Internal error was: %s' % (osm_id, ex))
                 cur.execute('ROLLBACK TO SAVEPOINT polygonfix;')
                 cur.execute('DELETE FROM %s WHERE osm_id = %d' % (self.table_name, osm_id))

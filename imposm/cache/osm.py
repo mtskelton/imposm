@@ -31,7 +31,7 @@ class OSMCache(object):
         self.caches = {}
 
     def close_all(self):
-        for mode_, cache in self.caches.values():
+        for mode_, cache in list(self.caches.values()):
             cache.close()
         self.caches = {}
 

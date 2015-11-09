@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import with_statement
+
 import glob
 import sys
 import os
@@ -25,12 +25,12 @@ from imposm.util import setproctitle
 try:
     import shapely.speedups
     if shapely.speedups.available:
-        print 'Enabling Shapely speedups.'
+        print('Enabling Shapely speedups.')
         shapely.speedups.enable()
 except ImportError:
     try:
         import shapely_speedups
-        print 'Patching Shapely.'
+        print('Patching Shapely.')
         shapely_speedups.patch_shapely()
     except ImportError:
         pass
@@ -156,7 +156,7 @@ def main(argv=None):
 
     if options.proj:
         if ':' not in options.proj:
-            print 'ERROR: --proj should be in EPSG:00000 format'
+            print('ERROR: --proj should be in EPSG:00000 format')
             sys.exit(1)
         # check proj if meter_to_mapunit needs to do anything
         if options.proj.lower() == 'epsg:4326':
@@ -165,7 +165,7 @@ def main(argv=None):
     mapping_file = os.path.join(os.path.dirname(__file__),
         'defaultmapping.py')
     if options.mapping_file:
-        print 'loading %s as mapping' % options.mapping_file
+        print('loading %s as mapping' % options.mapping_file)
         mapping_file = options.mapping_file
 
     polygon = None
@@ -175,12 +175,12 @@ def main(argv=None):
         polygon = load_geom(options.limit_to)
         polygon_timer.stop()
         if polygon is None:
-            print 'ERROR: No valid polygon/multipolygon found'
+            print('ERROR: No valid polygon/multipolygon found')
             sys.exit(1)
 
     mappings = {}
-    execfile(mapping_file, mappings)
-    tag_mapping = TagMapper([m for n, m in mappings.iteritems()
+    exec(compile(open(mapping_file).read(), mapping_file, 'exec'), mappings)
+    tag_mapping = TagMapper([m for n, m in mappings.items()
         if isinstance(m, imposm.mapping.Mapping)], limit_to=polygon)
 
     if 'IMPOSM_MULTIPOLYGON_REPORT' in os.environ:
@@ -227,13 +227,13 @@ def main(argv=None):
             cache_files = glob.glob(os.path.join(options.cache_dir, 'imposm_*.cache'))
             if cache_files:
                 if not options.overwrite_cache:
-                    print (
+                    print((
                         "ERROR: found existing cache files in '%s'. "
                         'Remove --read option to use the existing cache '
                         'or use --overwrite-cache or --merge-cache to '
                         'overwrite or merge it.'
                         % os.path.abspath(options.cache_dir)
-                    )
+                    ))
                     sys.exit(2)
                 for cache_file in cache_files:
                     os.unlink(cache_file)
@@ -244,7 +244,7 @@ def main(argv=None):
         read_timer = imposm.util.Timer('reading', logger)
 
         if not args:
-            print "no file(s) supplied"
+            print("no file(s) supplied")
             sys.exit(2)
 
         if options.write:

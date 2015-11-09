@@ -125,7 +125,7 @@ def main():
         mapping['postgis'] = string.Template(postgis_create_template_15).substitute(mapping)
 
     template = string.Template(db_create_template)
-    print template.substitute(mapping)
+    print(template.substitute(mapping))
 
 
 

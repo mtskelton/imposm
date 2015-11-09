@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import division
+
 import os
 import time
 
@@ -149,12 +149,12 @@ class RelationBuilderBase(object):
             if time_ways + time_rings + time_relations > imposm.config.imposm_multipolygon_report:
                 log.warn('building relation %d with %d ways (%.1fms) and %d rings (%.1fms) took %.1fms',
                     self.relation.osm_id, len(ways), time_ways*1000, len(rings), time_rings*1000, time_relations*1000)
-        except InvalidGeometryError, ex:
+        except InvalidGeometryError as ex:
             log.debug(ex)
             raise IncompletePolygonError(ex)
         except IncompletePolygonError:
             raise
-        except Exception, ex:
+        except Exception as ex:
             log.warn('error while building multipolygon:')
             log.exception(ex)
             raise IncompletePolygonError(ex)
@@ -223,9 +223,9 @@ class ContainsRelationBuilder(RelationBuilderBase):
 
         shells = set([rings[0]])
 
-        for i in xrange(total_rings):
+        for i in range(total_rings):
             test_geom = shapely.prepared.prep(rings[i].geom)
-            for j in xrange(i+1, total_rings):
+            for j in range(i+1, total_rings):
                 if test_geom.contains(rings[j].geom):
                     # j in inside of i
                     if rings[j].contained_by is not None:

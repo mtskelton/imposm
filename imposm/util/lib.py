@@ -45,7 +45,7 @@ additional_lib_path = os.environ.get('MAPPROXY_LIB_PATH')
 if additional_lib_path:
     additional_lib_path = additional_lib_path.split(os.pathsep)
     additional_lib_path.reverse()
-    for locs in default_locations.values():
+    for locs in list(default_locations.values()):
         for path in additional_lib_path:
             locs['paths'].insert(0, path)
 
@@ -57,7 +57,7 @@ def load_library(lib_names, locations_conf=default_locations):
     
     Retruns the loaded library or None.
     """
-    if isinstance(lib_names, basestring):
+    if isinstance(lib_names, str):
         lib_names = [lib_names]
     
     for lib_name in lib_names:
@@ -104,4 +104,4 @@ def find_library(lib_name, paths=None, exts=None):
     return None
 
 if __name__ == '__main__':
-    print load_library(sys.argv[1])
+    print(load_library(sys.argv[1]))

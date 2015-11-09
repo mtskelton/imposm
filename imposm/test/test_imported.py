@@ -42,7 +42,7 @@ def setup_module():
     os.chdir(temp_dir)
     test_osm_file = os.path.join(os.path.dirname(__file__), 'test.out.osm')
     with capture_out():
-        print db_conf.password
+        print(db_conf.password)
         imposm.app.main(['--read', test_osm_file, '--write',
             '--proj', db_conf.proj, '--table-prefix', db_conf.prefix,
             '--connect', 'postgis://%(user)s:%(password)s@%(host)s:%(port)s/%(db)s' % db_conf])
@@ -96,7 +96,7 @@ def teardown_module():
 @contextmanager
 def capture_out():
     import sys
-    from cStringIO import StringIO
+    from io import StringIO
 
     old_stdout = sys.stdout
     old_stderr = sys.stderr
